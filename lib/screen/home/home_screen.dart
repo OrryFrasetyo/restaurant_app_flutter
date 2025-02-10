@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _fetchRestaurantList() {
     Future.microtask(() {
+      if (!mounted) return;
       context.read<RestaurantListProvider>().fetchRestaurantList();
     });
   }

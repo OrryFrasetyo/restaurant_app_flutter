@@ -7,7 +7,7 @@ import 'package:restaurant_app/data/model/restaurant_review_response.dart';
 import 'package:restaurant_app/data/model/restaurant_search_response.dart';
 
 class ApiServices {
-  static const String _baseUrl = "https://restaurant-api.dicoding.dev//";
+  static const String _baseUrl = "https://restaurant-api.dicoding.dev/";
 
   Future<RestaurantListResponse> getRestaurantList() async {
     final response = await http.get(Uri.parse("$_baseUrl/list"));
