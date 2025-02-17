@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:restaurant_app/data/model/restaurant_detail.dart';
+import 'package:restaurant_app/screen/detail/detail_menu_card_widget.dart';
 import 'package:restaurant_app/screen/detail/restaurant_description_widget.dart';
 import 'package:restaurant_app/style/colors/restaurant_colors.dart';
 import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
 class BodyOfDetailScreenWidget extends StatelessWidget {
+  static const String _baseUrl =
+      "https://restaurant-api.dicoding.dev/images/large/";
+
   final RestaurantDetail restaurant;
 
   const BodyOfDetailScreenWidget({
@@ -26,7 +30,8 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
               child: Hero(
                 tag: restaurant.id,
                 child: Image.network(
-                  "https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}",
+                  // "https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}",
+                  _baseUrl + restaurant.pictureId,
                   loadingBuilder: (context, value, loadingStatus) {
                     if (loadingStatus == null) return value;
                     return Center(
@@ -171,29 +176,10 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
               itemCount: restaurant.menus.foods.length,
               itemBuilder: (context, index) {
                 final food = restaurant.menus.foods[index];
-                return Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.fastfood,
-                        color: RestaurantColors.primary.color,
-                        size: 36,
-                      ),
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      Text(
-                        food.name,
-                        textAlign: TextAlign.center,
-                        style: RestaurantTextStyles.titleSmall,
-                      ),
-                    ],
-                  ),
+                return DetailMenuCardWidget(
+                  icon: Icons.fastfood,
+                  name: food.name,
+                  color: RestaurantColors.primary.color,
                 );
               },
             ),
@@ -219,29 +205,10 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
               itemCount: restaurant.menus.drinks.length,
               itemBuilder: (context, index) {
                 final drink = restaurant.menus.drinks[index];
-                return Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.local_drink,
-                        color: RestaurantColors.primary.color,
-                        size: 36,
-                      ),
-                      SizedBox(
-                        height: 8.0,
-                      ),
-                      Text(
-                        drink.name,
-                        textAlign: TextAlign.center,
-                        style: RestaurantTextStyles.titleSmall,
-                      ),
-                    ],
-                  ),
+                return DetailMenuCardWidget(
+                  icon: Icons.local_drink,
+                  name: drink.name,
+                  color: RestaurantColors.primary.color,
                 );
               },
             ),
