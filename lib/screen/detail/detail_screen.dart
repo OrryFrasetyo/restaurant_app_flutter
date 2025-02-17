@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
-import 'package:restaurant_app/provider/review/add_review_section_provider.dart';
 import 'package:restaurant_app/screen/detail/body_of_detail_screen_widget.dart';
 import 'package:restaurant_app/screen/detail/detail_app_bar_widget.dart';
 import 'package:restaurant_app/screen/detail/detail_error_state_widget.dart';
@@ -40,10 +39,6 @@ class _DetailScreenState extends State<DetailScreen> {
   }
 
   void _showAddReviewDialog(BuildContext context) {
-    
-    context.read<AddReviewSectionProvider>().resetState();
-
-    print("Opening Add Review Dialog"); // Print statement
     showDialog(
       context: context,
       builder: (context) {

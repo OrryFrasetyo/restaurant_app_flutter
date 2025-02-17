@@ -52,14 +52,10 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
   void _onSuccess(BuildContext context) {
     final sectionProvider = context.read<AddReviewSectionProvider>();
 
-    print("Review added successfully"); // Print statement
-
     if (!sectionProvider.isDetailUpdated) {
       sectionProvider.setSuccessMessage("Successfully added a review");
       _nameController.clear();
       _reviewController.clear();
-
-      Navigator.pop(context);
 
       context
           .read<RestaurantDetailProvider>()
@@ -148,10 +144,6 @@ class _AddReviewWidgetState extends State<AddReviewWidget> {
                         _onSuccess(context);
                       }
                     });
-                    // Future.microtask(() {
-                    //   if (!mounted) return;
-                    //   _onSuccess(context);
-                    // });
                   }
 
                   return ElevatedButton(
