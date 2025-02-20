@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/model/restaurant_detail.dart';
+import 'package:restaurant_app/provider/detail/favorite_icon_provider.dart';
+import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/screen/detail/detail_menu_card_widget.dart';
+import 'package:restaurant_app/screen/detail/favorite_icon_widget.dart';
 import 'package:restaurant_app/screen/detail/restaurant_description_widget.dart';
+import 'package:restaurant_app/static/restaurant_detail_result_state.dart';
 import 'package:restaurant_app/style/colors/restaurant_colors.dart';
 import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
@@ -30,7 +35,6 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
               child: Hero(
                 tag: restaurant.id,
                 child: Image.network(
-                  // "https://restaurant-api.dicoding.dev/images/large/${restaurant.pictureId}",
                   _baseUrl + restaurant.pictureId,
                   loadingBuilder: (context, value, loadingStatus) {
                     if (loadingStatus == null) return value;
@@ -66,6 +70,18 @@ class BodyOfDetailScreenWidget extends StatelessWidget {
                   child: Text(
                     restaurant.name,
                     style: RestaurantTextStyles.headlineLarge,
+                  ),
+                ),
+                ChangeNotifierProvider(
+                  create: (context) => FavoriteIconProvider(),
+                  child: Consumer<RestaurantDetailProvider>(
+                    builder: (context, value, child) {
+                      return switch (value.resultState) {
+                        RestaurantDetailLoadedState(data: var restaurant) =>
+                          FavoriteIconWidget(restaurant: restaurant),
+                        _ => SizedBox(),
+                      };
+                    },
                   ),
                 ),
               ],

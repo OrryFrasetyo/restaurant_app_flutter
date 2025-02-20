@@ -5,6 +5,8 @@ import 'package:restaurant_app/style/colors/restaurant_colors.dart';
 import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
 class RestaurantCardWidget extends StatelessWidget {
+  static const String _baseUrl =
+      "https://restaurant-api.dicoding.dev/images/medium/";
   final Restaurant restaurant;
   final Function() onTap;
 
@@ -36,7 +38,7 @@ class RestaurantCardWidget extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
                   child: Image.network(
-                    "https://restaurant-api.dicoding.dev/images/medium/${restaurant.pictureId}",
+                    _baseUrl + restaurant.pictureId,
                     loadingBuilder: (context, value, loadingStatus) {
                       if (loadingStatus == null) return value;
                       return Center(
