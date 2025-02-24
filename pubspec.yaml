@@ -22,13 +22,20 @@ dependencies:
   flutter_local_notifications: ^18.0.1
   flutter_timezone: ^4.1.0
   timezone: ^0.10.0
+  workmanager:
+    git:
+      url: https://github.com/fluttercommunity/flutter_workmanager.git
+      path: workmanager
+      ref: main
 
 dev_dependencies:
-  test: ^1.25.15
-  mocktail: ^1.0.4
-
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
+
+  test: ^1.25.15
+  mocktail: ^1.0.4
 
   flutter_lints: ^5.0.0
 

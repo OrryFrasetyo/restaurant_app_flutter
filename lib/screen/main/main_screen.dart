@@ -16,7 +16,7 @@ class MainScreen extends StatelessWidget {
         builder: (context, value, child) {
           return switch (value.indexBottomNavBar) {
             0 => HomeScreen(),
-            1 => FavoriteScreen(), //perbaiki
+            1 => FavoriteScreen(),
             _ => SettingScreen(),
           };
         },

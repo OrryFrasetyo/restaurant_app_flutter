@@ -7,7 +7,6 @@ import 'package:restaurant_app/screen/home/home_error_state_widget.dart';
 import 'package:restaurant_app/screen/home/restaurant_list_widget.dart';
 import 'package:restaurant_app/screen/loading/loading_state_widget.dart';
 import 'package:restaurant_app/static/restaurant_list_result_state.dart';
-import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,74 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
         .read<LocalNotificationProvider>()
         .scheduleDailyElevenAMNotification();
   }
-
-  // Future<void> _checkPendingNotificationRequests() async {
-  //   final localNotificationProvider = context.read<LocalNotificationProvider>();
-  //   await localNotificationProvider.checkPendingNotificationRequests();
-
-  //   if (!mounted) {
-  //     return;
-  //   }
-
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       final pendingData = context
-  //           .watch<LocalNotificationProvider>()
-  //           .pendingNotificationRequests;
-  //       return AlertDialog(
-  //         title: Text(
-  //           '${pendingData.length} pending notification requests',
-  //           style: RestaurantTextStyles.titleMedium,
-  //           maxLines: 1,
-  //           overflow: TextOverflow.ellipsis,
-  //         ),
-  //         content: SizedBox(
-  //           width: 300,
-  //           height: 300,
-  //           child: ListView.builder(
-  //             itemCount: pendingData.length,
-  //             itemBuilder: (context, index) {
-  //               final item = pendingData[index];
-  //               return ListTile(
-  //                 title: Text(
-  //                   item.title ?? "",
-  //                   style: RestaurantTextStyles.titleSmall,
-  //                   overflow: TextOverflow.ellipsis,
-  //                 ),
-  //                 subtitle: Text(
-  //                   item.body ?? "",
-  //                   style: RestaurantTextStyles.bodySmall,
-  //                   maxLines: 1,
-  //                   overflow: TextOverflow.ellipsis,
-  //                 ),
-  //                 contentPadding: EdgeInsets.zero,
-  //                 trailing: IconButton(
-  //                   onPressed: () {
-  //                     localNotificationProvider.cancelNotification(item.id);
-  //                   },
-  //                   icon: Icon(Icons.delete_outline),
-  //                 ),
-  //               );
-  //             },
-  //             shrinkWrap: true,
-  //           ),
-  //         ),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text(
-  //               "OK",
-  //               style: RestaurantTextStyles.labelLarge,
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
