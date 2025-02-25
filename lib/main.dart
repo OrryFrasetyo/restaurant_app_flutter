@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
 import 'package:restaurant_app/data/local/local_database_service.dart';
 import 'package:restaurant_app/data/local/local_notification_service.dart';
+import 'package:restaurant_app/data/local/workmanager_service.dart';
 import 'package:restaurant_app/provider/detail/restaurant_detail_provider.dart';
 import 'package:restaurant_app/provider/favorite/local_database_provider.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
@@ -27,6 +28,9 @@ void main() async {
   final notificationProvider =
       LocalNotificationProvider(localNotificationService);
   await notificationProvider.initialize();
+  
+  final workmanagerService = WorkmanagerService();
+  await workmanagerService.init();
 
   runApp(
     MultiProvider(
@@ -78,6 +82,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (context) => notificationProvider,
+        ),
+        Provider(
+          create: (context) => workmanagerService,
         ),
       ],
       child: MyApp(),

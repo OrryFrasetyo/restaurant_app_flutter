@@ -62,7 +62,7 @@ class LocalNotificationService {
   tz.TZDateTime _nextInstanceOfElevenAM() {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate =
-        tz.TZDateTime(tz.local, now.year, now.month, now.day, 16); 
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, 11); 
 
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(Duration(days: 1));
