@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "D:\\development\\flutter\\packages\\flutter_tools\\gradle\\src\\main\\groovy\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "D:\\development\\AndroidSdk\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "D:\\bismillah_fullstackdev\\id_camp\\flutter_fundamental\\restaurant_app_flutter\\android\\app\\.cxx\\Debug\\6t642334\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "D:\\development\\AndroidSdk\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "D:\\bismillah_fullstackdev\\id_camp\\flutter_fundamental\\restaurant_app_flutter\\android\\app\\.cxx\\Debug\\6t642334\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

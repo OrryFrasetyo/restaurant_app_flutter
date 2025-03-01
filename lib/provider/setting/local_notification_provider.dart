@@ -1,98 +1,72 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter/widgets.dart';
+import 'package:restaurant_app/data/api/shared_preferences_service.dart';
 import 'package:restaurant_app/data/local/local_notification_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:restaurant_app/data/local/workmanager_service.dart';
+import 'package:workmanager/workmanager.dart';
 
 class LocalNotificationProvider extends ChangeNotifier {
+  final SharedPreferencesService _sharedPreferencesService;
+  bool _isNotificationEnabled = false;
   final LocalNotificationService flutterNotificationService;
 
-  LocalNotificationProvider(this.flutterNotificationService);
-
-  int _notificationId = 0;
-  bool _isNotificationEnabled = false;
-
-  bool get isNotificationEnabled => _isNotificationEnabled;
-
-  bool? _permission;
-
+  bool? _permission = true;
   bool? get permission => _permission;
 
-  List<PendingNotificationRequest> pendingNotificationRequests = [];
+  LocalNotificationProvider(
+    this._sharedPreferencesService,
+    this.flutterNotificationService,
+  ) {
+    _loadNotif();
+  }
+  bool get isNotificationEnabled => _isNotificationEnabled;
 
-  Future<void> initialize() async {
-    final sharedPrefs = await SharedPreferences.getInstance();
+  Future<void> requestPermissions() async {
+    _permission = await flutterNotificationService.requestPermissions();
+    notifyListeners();
+  }
+
+  Future<void> _loadNotif() async {
     _isNotificationEnabled =
-        sharedPrefs.getBool('isNotificationEnabled') ?? false;
+        await _sharedPreferencesService.getSettingLunchReminder();
 
-    _permission = await flutterNotificationService.requestPermission();
+    if (_isNotificationEnabled) {
+      print("Status notifikasi dari SharedPreferences: $_isNotificationEnabled");
+      notifyListeners();
+    } else {
+      await Workmanager().cancelAll();
+      notifyListeners();
+    }
+  }
 
-    if (_permission == true) {
-      await flutterNotificationService.configureLocalTimeZone();
+  Future<void> toggleLunchNotif(bool value) async {
+    _isNotificationEnabled = value;
 
-      if (_isNotificationEnabled) {
-        _notificationId = 1;
-        debugPrint(
-            "Scheduling notification during initialize"); // TODO: nanti hapus debug
-        await flutterNotificationService.scheduleDailyElevenAMNotification(
-          id: _notificationId,
-        );
-      } else {
-        debugPrint(
-            "Canceling notification during initialize"); // TODO: nanti hapus debug
-        await flutterNotificationService.cancelNotification(_notificationId);
+    print("toggleLunchNotif dipanggil dengan nilai: $value");
+
+    // Add permission check
+    if (value && _permission != true) {
+      print("Requesting permissions first...");
+      await requestPermissions();
+      if (_permission != true) {
+        print("Permission denied!");
+        _isNotificationEnabled = false;
+        notifyListeners();
+        return;
       }
     }
 
-    await checkPendingNotificationRequests();
-    notifyListeners();
-  }
-
-  Future<void> toggleNotification(bool value) async {
-    _isNotificationEnabled = value;
-    notifyListeners();
-
-    final sharedPrefs = await SharedPreferences.getInstance();
-    sharedPrefs.setBool('isNotificationEnabled', _isNotificationEnabled);
+    await _sharedPreferencesService.saveSettingLunchReminder(
+      _isNotificationEnabled,
+    );
 
     if (_isNotificationEnabled) {
-      _notificationId = 1;
-      debugPrint("Scheduling notification with ID $_notificationId"); //TODO
-      await flutterNotificationService.scheduleDailyElevenAMNotification(
-        id: _notificationId,
-      );
+      // menjadwalkan reminder di jam 11
+      WorkmanagerService().scheduleDailyElevenAMNotification();
+      notifyListeners();
     } else {
-      debugPrint("Canceling notification with ID $_notificationId"); //TODO
-      await flutterNotificationService.cancelNotification(_notificationId);
-
-      final pendingNotifications = 
-      await flutterNotificationService.pendingNotificationRequests();
-
-      for (var notification in pendingNotifications) {
-        await flutterNotificationService.cancelNotification(notification.id);
-        debugPrint("Canceled notification with ID ${notification.id}"); //TODO
-      } 
+      notifyListeners();
+      await Workmanager().cancelAll();
+      print('data dihapus');
     }
-
-    await checkPendingNotificationRequests();
-  }
-
-  Future<void> scheduleDailyElevenAMNotification() async {
-    _notificationId = 1;
-    await flutterNotificationService.scheduleDailyElevenAMNotification(
-      id: _notificationId,
-    );
-  }
-
-  Future<void> checkPendingNotificationRequests() async {
-    pendingNotificationRequests =
-        await flutterNotificationService.pendingNotificationRequests();
-    debugPrint(
-        "Pending notifications: ${pendingNotificationRequests.map((e) => e.id).toList()}"); //TODO : nanti hapus debug
-    notifyListeners();
-  }
-
-  Future<void> cancelNotification(int id) async {
-    debugPrint("Attempting to cancel notification with ID $id");
-    await flutterLocalNotificationsPlugin.cancel(id);
   }
 }

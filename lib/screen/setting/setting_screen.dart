@@ -45,6 +45,22 @@ class SettingScreen extends StatelessWidget {
             SizedBox(
               height: 8.0,
             ),
+            // Consumer<LocalNotificationProvider>(
+            //   builder: (context, notificationProvider, child) {
+            //     return Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //       children: [
+            //         Text("Enable Notification"),
+            //         Switch(
+            //           value: notificationProvider.isNotificationEnabled,
+            //           onChanged: (value) {
+            //             notificationProvider.toggleLunchNotif(value);
+            //           },
+            //         )
+            //       ],
+            //     );
+            //   },
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -52,7 +68,7 @@ class SettingScreen extends StatelessWidget {
                 Switch(
                   value: notificationProvider.isNotificationEnabled,
                   onChanged: (value) {
-                    notificationProvider.toggleNotification(value);
+                    notificationProvider.toggleLunchNotif(value);
                   },
                 )
               ],

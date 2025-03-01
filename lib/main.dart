@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/data/api/api_services.dart';
+import 'package:restaurant_app/data/api/shared_preferences_service.dart';
 import 'package:restaurant_app/data/local/local_database_service.dart';
 import 'package:restaurant_app/data/local/local_notification_service.dart';
 import 'package:restaurant_app/data/local/workmanager_service.dart';
@@ -11,32 +12,61 @@ import 'package:restaurant_app/provider/main/index_nav_provider.dart';
 import 'package:restaurant_app/provider/review/restaurant_add_review_provider.dart';
 import 'package:restaurant_app/provider/search/restaurant_search_provider.dart';
 import 'package:restaurant_app/provider/setting/local_notification_provider.dart';
+import 'package:restaurant_app/provider/setting/payload_provider.dart';
 import 'package:restaurant_app/provider/setting/theme_provider.dart';
 import 'package:restaurant_app/screen/detail/detail_screen.dart';
 import 'package:restaurant_app/screen/main/main_screen.dart';
 import 'package:restaurant_app/screen/search/search_screen.dart';
 import 'package:restaurant_app/static/navigation_route.dart';
 import 'package:restaurant_app/style/theme/restaurant_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
-  tz.initializeTimeZones;
+  // tz.initializeTimeZones;
 
   WidgetsFlutterBinding.ensureInitialized();
 
+  final prefs = await SharedPreferences.getInstance();
+
   final localNotificationService = LocalNotificationService();
-  final notificationProvider =
-      LocalNotificationProvider(localNotificationService);
-  await notificationProvider.initialize();
-  
-  final workmanagerService = WorkmanagerService();
-  await workmanagerService.init();
+  await localNotificationService.init();
+  await localNotificationService.configureLocalTimeZone();
+
+  await localNotificationService.requestPermissions();
+  // final notificationProvider =
+  //     LocalNotificationProvider(localNotificationService);
+  // await notificationProvider.initialize();
+
+  final notificationAppLaunchDetails =
+      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  String? payload;
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    final notificationResponse =
+        notificationAppLaunchDetails!.notificationResponse;
+    payload = notificationResponse?.payload;
+  }
+
+  final workManagerService = WorkmanagerService();
+  workManagerService.initialize();
 
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (context) => IndexNavProvider(),
+        ),
         Provider(
           create: (context) => ApiServices(),
+        ),
+        Provider(
+          create: (context) => SharedPreferencesService(prefs),
+        ),
+        Provider(
+          create: (context) => LocalDatabaseService(),
+        ),
+        Provider(
+          create: (context) => LocalNotificationService(),
         ),
         ChangeNotifierProvider(
           create: (context) => RestaurantListProvider(
@@ -59,12 +89,6 @@ void main() async {
           ),
         ),
         ChangeNotifierProvider(
-          create: (context) => IndexNavProvider(),
-        ),
-        Provider(
-          create: (context) => LocalDatabaseService(),
-        ),
-        ChangeNotifierProvider(
           create: (context) => LocalDatabaseProvider(
             context.read<LocalDatabaseService>(),
           ),
@@ -72,19 +96,14 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) => ThemeProvider(),
         ),
-        Provider(
-          create: (context) => LocalNotificationService(),
+        ChangeNotifierProvider(
+          create: (context) => PayloadProvider(payload: payload),
         ),
         ChangeNotifierProvider(
           create: (context) => LocalNotificationProvider(
+            context.read<SharedPreferencesService>(),
             context.read<LocalNotificationService>(),
           ),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => notificationProvider,
-        ),
-        Provider(
-          create: (context) => workmanagerService,
         ),
       ],
       child: MyApp(),

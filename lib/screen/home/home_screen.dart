@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:restaurant_app/data/local/local_notification_service.dart';
+import 'package:restaurant_app/data/model/received_notification.dart';
 import 'package:restaurant_app/provider/home/restaurant_list_provider.dart';
 import 'package:restaurant_app/provider/setting/local_notification_provider.dart';
+import 'package:restaurant_app/provider/setting/payload_provider.dart';
 import 'package:restaurant_app/screen/home/home_app_bar_widget.dart';
 import 'package:restaurant_app/screen/home/home_error_state_widget.dart';
 import 'package:restaurant_app/screen/home/restaurant_list_widget.dart';
@@ -18,10 +21,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
+    _configureSelectNotificationSubject();
+    _configureDidReceiveLocalNotificationSubject();
     super.initState();
     _fetchRestaurantList();
-    _scheduleDailyElevenAMNotification();
-    context.read<LocalNotificationProvider>().initialize();
+    // _scheduleDailyElevenAMNotification();
+    // context.read<LocalNotificationProvider;
+    
+  }
+
+  void _configureSelectNotificationSubject() {
+    selectNotificationStream.stream.listen((String? payload) {
+      context.read<PayloadProvider>().payload = payload;
+    });
+  }
+
+  void _configureDidReceiveLocalNotificationSubject() {
+    didReceiveLocalNotificationStream.stream
+        .listen((ReceivedNotification receivedNotification) {
+      final payload = receivedNotification.payload;
+      context.read<PayloadProvider>().payload = payload;
+    });
   }
 
   void _fetchRestaurantList() {
@@ -31,11 +51,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<void> _scheduleDailyElevenAMNotification() async {
-    context
-        .read<LocalNotificationProvider>()
-        .scheduleDailyElevenAMNotification();
+  @override
+  void dispose() {
+    selectNotificationStream.close();
+    didReceiveLocalNotificationStream.close();
+    super.dispose();
   }
+
+  // Future<void> _scheduleDailyElevenAMNotification() async {
+  //   context
+  //       .read<LocalNotificationProvider>()
+  //       .scheduleDailyElevenAMNotification();
+  // }
 
   @override
   Widget build(BuildContext context) {

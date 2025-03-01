@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import workmanager
  
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -17,6 +18,14 @@ import UIKit
      UIApplication.shared.cancelAllLocalNotifications()
      UserDefaults.standard.set(true, forKey: "Notification")
    }
+ 
+   WorkmanagerPlugin.setPluginRegistrantCallback { registry in
+       GeneratedPluginRegistrant.register(with: registry)
+   }
+ 
+   WorkmanagerPlugin.registerBGProcessingTask(withIdentifier: "task-identifier")
+ 
+   WorkmanagerPlugin.registerPeriodicTask(withIdentifier: "com.example.restaurant_app", frequency: NSNumber(value: 16 * 60))
  
    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
  }
