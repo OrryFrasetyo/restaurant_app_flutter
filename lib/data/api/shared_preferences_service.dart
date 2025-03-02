@@ -5,15 +5,15 @@ class SharedPreferencesService {
 
   SharedPreferencesService(this._sharedPreferences);
 
-  Future<void> saveSettingLunchReminder(bool lunch) async {
+  Future<void> saveSettingDailyReminder(bool daily) async {
     try {
-      await _sharedPreferences.setBool('lunchBool', lunch);
+      await _sharedPreferences.setBool('dailyBool', daily);
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  bool getSettingLunchReminder() {
-    return _sharedPreferences.getBool('lunchBool') ?? false;
+  bool getSettingDailyReminder() {
+    return _sharedPreferences.getBool('dailyBool') ?? false;
   }
 }

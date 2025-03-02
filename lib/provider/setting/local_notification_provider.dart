@@ -16,7 +16,7 @@ class LocalNotificationProvider extends ChangeNotifier {
     this._sharedPreferencesService,
     this.flutterNotificationService,
   ) {
-    _loadNotif();
+    _loadDailyNotif();
   }
   bool get isNotificationEnabled => _isNotificationEnabled;
 
@@ -25,9 +25,9 @@ class LocalNotificationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> _loadNotif() async {
+  Future<void> _loadDailyNotif() async {
     _isNotificationEnabled =
-        await _sharedPreferencesService.getSettingLunchReminder();
+        await _sharedPreferencesService.getSettingDailyReminder();
 
     if (_isNotificationEnabled) {
       print("Status notifikasi dari SharedPreferences: $_isNotificationEnabled");
@@ -38,10 +38,10 @@ class LocalNotificationProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> toggleLunchNotif(bool value) async {
+  Future<void> toggleDailyNotif(bool value) async {
     _isNotificationEnabled = value;
 
-    print("toggleLunchNotif dipanggil dengan nilai: $value");
+    print("toggleDailyNotif dipanggil dengan nilai: $value");
 
     // Add permission check
     if (value && _permission != true) {
@@ -55,7 +55,7 @@ class LocalNotificationProvider extends ChangeNotifier {
       }
     }
 
-    await _sharedPreferencesService.saveSettingLunchReminder(
+    await _sharedPreferencesService.saveSettingDailyReminder(
       _isNotificationEnabled,
     );
 

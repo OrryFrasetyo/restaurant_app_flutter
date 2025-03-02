@@ -23,7 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
-  // tz.initializeTimeZones;
+  tz.initializeTimeZones;
 
   WidgetsFlutterBinding.ensureInitialized();
 

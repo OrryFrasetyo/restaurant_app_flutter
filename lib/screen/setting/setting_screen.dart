@@ -5,14 +5,19 @@ import 'package:restaurant_app/provider/setting/theme_provider.dart';
 import 'package:restaurant_app/style/colors/restaurant_colors.dart';
 import 'package:restaurant_app/style/typography/restaurant_text_styles.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
 
   @override
+  State<SettingScreen> createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends State<SettingScreen> {
+  @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final notificationProvider =
-        Provider.of<LocalNotificationProvider>(context);
+    // final notificationProvider =
+    //     Provider.of<LocalNotificationProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -65,12 +70,23 @@ class SettingScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Enable Notification"),
-                Switch(
-                  value: notificationProvider.isNotificationEnabled,
-                  onChanged: (value) {
-                    notificationProvider.toggleLunchNotif(value);
-                  },
-                )
+                Consumer<LocalNotificationProvider>(
+                    builder: (context, value, child) {
+                  return Switch(
+                    value: value.isNotificationEnabled,
+                    onChanged: (value) {
+                      final notifProvider =
+                          context.read<LocalNotificationProvider>();
+                      notifProvider.toggleDailyNotif(value);
+                    },
+                  );
+                })
+                // Switch(
+                //   value: notificationProvider.isNotificationEnabled,
+                //   onChanged: (value) {
+                //     notificationProvider.toggleLunchNotif(value);
+                //   },
+                // ),
               ],
             ),
             SizedBox(

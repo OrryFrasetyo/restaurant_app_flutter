@@ -89,22 +89,22 @@ class LocalNotificationService {
     tz.setLocalLocation(tz.getLocation(timeZoneName));
   }
 
+  Duration nextInstanceOfElevenAM() {
+    final DateTime now = DateTime.now();
+    DateTime scheduledDate = DateTime(now.year, now.month, now.day, 7, 33);
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+    final initialDelay = scheduledDate.difference(now);
+    return initialDelay;
+  }
+
   Future<bool> _requestExactAlarmsPermission() async {
     return await flutterLocalNotificationsPlugin
             .resolvePlatformSpecificImplementation<
                 AndroidFlutterLocalNotificationsPlugin>()
             ?.requestExactAlarmsPermission() ??
         false;
-  }
-
-  Duration nextInstanceOfElevenAM() {
-    final DateTime now = DateTime.now();
-    DateTime scheduledDate = DateTime(now.year, now.month, now.day, 16, 05);
-    if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
-    final initialDelay = scheduledDate.difference(now);
-    return initialDelay;
   }
 
   static Future<void> sendRestaurantNotification() async {

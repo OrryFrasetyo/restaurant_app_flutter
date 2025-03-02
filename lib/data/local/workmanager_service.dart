@@ -9,9 +9,9 @@ void callbackDispatcher() {
 
   Workmanager().executeTask((task, inputData) async {
     if (task == "daily_restaurant_notification") {
-      log("✅ ........ load");
+      log("load...");
       await LocalNotificationService.sendRestaurantNotification();
-      log("✅ Notifikasi berhasil dijadwalkan!");
+      log("Notifikasi berhasil dijadwalkan!");
     }
     return Future.value(true);
   });
@@ -40,7 +40,6 @@ class WorkmanagerService {
       "daily_restaurant_notification",
       frequency: Duration(days: 1),
       initialDelay: datetimeSchedule,
-      // constraints: Constraints(networkType: NetworkType.connected),
     );
   }
 }
